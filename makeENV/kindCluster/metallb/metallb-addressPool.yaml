@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: cwave-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.29.0.100-172.29.0.110 # set by make target
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: cwave-loadbalancer-advertisement
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - cwave-pool

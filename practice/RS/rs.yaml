@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 5
+  selector:
+    matchLabels:
+      tier: frontend
+    matchExpressions:
+      - {key: env, operator: In, values: [prod]}
+      - {key: priority, operator: NotIn, values: [low]}
+  template:
+    metadata:
+      labels:
+        tier: frontend
+        env: prod
+        priority: high
+    spec:
+      containers:
+      - name: php-redis
+        image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-dp
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: httpd
+  strategy: 
+    type: RollingUpdate # Recrate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 3
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+      - name: httpd-container
+        image: httpd:alpine3.20
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

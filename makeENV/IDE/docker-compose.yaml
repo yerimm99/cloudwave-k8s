@@ -1,0 +1,58 @@
+version: "3.8"
+name: "cloudwave_practice"
+
+services:
+  server:
+    image: dangtong/cloudwave_env:1.0
+    container_name: "ide"
+#    networks:
+#     - kind_network
+    environment:
+      FILE__PASSWORD: /run/secrets/code-server-password
+    env_file:
+      - .env
+    working_dir: /code
+    ports:
+      - "8444:8443"
+    secrets:
+      - code-server-password
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - local_code:/code/local
+      - remote_code:/code/remote
+      - config:/config
+    # depends_on:
+    #   server:
+    #     condition: service_completed_successfully
+  gitsync:
+    profiles:
+      - init
+    image: registry.k8s.io/git-sync/git-sync:v4.1.0
+    container_name: "git"
+    environment:
+      GITSYNC_REPO: https://github.com/matenduel/cloudwave
+      GITSYNC_ROOT: /tmp/git
+      GITSYNC_REF: main
+      GITSYNC_DEPTH: 1
+      GITSYNC_ONE_TIME: 1
+    volumes:
+      - remote_code:/tmp
+#networks:
+#  kind_network:
+#    name: kind
+#    external: true
+
+volumes:
+  local_code:
+    external: true
+    name: local_code
+  remote_code:
+    external: true
+    name: remote_code
+  config:
+    external: true
+    name: config
+
+secrets:
+  code-server-password:
+    file: password.txt

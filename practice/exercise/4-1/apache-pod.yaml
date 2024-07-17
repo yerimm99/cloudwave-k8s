@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apache-pod
+  labels:
+    name: apache
+    tier: frontend
+    app: apache
+spec:
+  nodeSelector:
+    memsize: "high"
+  containers:
+  - name: apache-container
+    image: bitnami/apache
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80

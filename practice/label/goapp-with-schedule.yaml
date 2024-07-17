@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: goapp
+  labels:
+    name: goapp
+spec:
+  nodeSelector:
+    memsize: "high"
+  containers:
+  - name: goapp
+    image: dangtong/goapp
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 8080

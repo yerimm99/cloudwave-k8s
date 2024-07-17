@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: goapp-on-ssd
+spec:
+  selector:
+    matchLabels:
+      app: goapp-pod
+  template:
+    metadata:
+      labels:
+        app: goapp-pod
+    spec:
+      nodeSelector:
+        disk: ssd
+      containers:
+      - name: goapp-container
+        image: dangtong/goapp

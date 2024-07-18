@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-configvol
+spec:
+  containers:
+  - image: nginx:1.7.9
+    name: web-server
+    volumeMounts:
+    - name: config
+      mountPath: /etc/nginx/conf.d/default.conf
+      subPath: custom-nginx-config.conf # 주의 : configmap 의 key 와 파일명이 일치 해야합니다.
+      readOnly: true
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+  volumes:
+  - name: config
+    configMap:
+      name: fortune-config
+      defaultMode: 0660

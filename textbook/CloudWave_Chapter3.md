@@ -33,7 +33,7 @@ chmod 755 fortuneloop.sh
 ##### 14.1.2 Docker 이미지 생성
 
 > Docker CMD 는 3가지 형태로 사용 가능 합니다.
->
+> 
 > - CMD [ "실행파일" ,  "파라메터1" , "파라메터2" ] → **실행파일 형태**
 > - CMD [ "파라메터1" , "파라메터2"]  → **ENTRYPOINT 의 디펄트 파라메터**
 > - CMD command 파라메터1 파라매터2 → **쉘 명령어 형태**
@@ -57,13 +57,13 @@ $ docker push dangtong/fortune:args
 ```
 
 > 테스트를 위해 다음과 같이 수행 가능
->
+> 
 > $ docker run -it dangtong/fortune:args # 기본 10초 수행
->
+> 
 > $ docker rm -f [docker-id]
->
+> 
 > $ docker run -it dangtong/fortune:args 15 # 15초로 매개변수 전달
->
+> 
 > $ docker rm -f [docker-id]
 
 ##### 14.1.3 Pod생성
@@ -100,7 +100,6 @@ spec:
   volumes:
   - name: html
     emptyDir: {}
-
 ```
 
 ```{bash}
@@ -198,7 +197,7 @@ $ kubectl create configmap fortune-config --from-literal=sleep-interval=7
 ```
 
 > ConfigMap 생성시 이름은 영문자,숫자, 대시, 밑줄, 점 만 포함 할 수 있습니다.
->
+> 
 > 만약 여러개의 매개변수를 저장 할려면 --from-literal=sleep-interval=5 --from-literal=sleep-count=10 와 같이 from-literal 부분을 여러번 반복해서 입력 하면 됩니다.
 
 - configMap 확인
@@ -262,7 +261,6 @@ spec:
   volumes:
   - name: html
     emptyDir: {}
-    
 ```
 
 ##### 14.3.3 Pod 생성 및 확인
@@ -313,15 +311,15 @@ vi custom-nginx-config.conf
 
 ```{conf}
 server {
-	listen				8080;
-	server_name		www.acron.com;
+    listen                8080;
+    server_name        www.acron.com;
 
-	gzip on;
-	gzip_types text/plain application/xml;
-	location / {
-		root	/usr/share/nginx/html;
-		index	index.html index.htm;
-	}
+    gzip on;
+    gzip_types text/plain application/xml;
+    location / {
+        root    /usr/share/nginx/html;
+        index    index.html index.htm;
+    }
 }
 ```
 
@@ -356,7 +354,7 @@ spec:
 ```
 
 > 서버에 접속해서 디렉토리 구조를 한번 보는것이 좋습니다.
->
+> 
 > kubectl exec -it nginx-pod bash
 
 ```{bash}
@@ -410,8 +408,6 @@ Content-Encoding: gzip
 
 ```{bash}
 $ kubectl edit cm fortune-config
-
-
 ```
 
 **gzip on** 부분을 **gzip off ** 로 변경 합니다.
@@ -601,7 +597,6 @@ $ kubectl exec -it nginx-configvol bash
 
 $ cd /etc/nginx/conf.d
 $ ls -al
-
 ```
 
 ## 15. Secret
@@ -636,19 +631,19 @@ vi custom-nginx-config.conf
 
 ```{bash}
 server {
-	listen				8080;
-  listen				443 ssl;
-	server_name		www.acron.com;
-	ssl_certificate		certs/https.cert;
-	ssl_certificate_key	certs/https.key;
-	ssl_protocols		TLSv1 TLSv1.1 TLSv1.2;
-	ssl_ciphers		HIGH:!aNULL:!MD5;
-	gzip on;
-	gzip_types text/plain application/xml;
-	location / {
-		root	/usr/share/nginx/html;
-		index	index.html index.htm;
-	}
+    listen                8080;
+  listen                443 ssl;
+    server_name        www.acron.com;
+    ssl_certificate        certs/https.cert;
+    ssl_certificate_key    certs/https.key;
+    ssl_protocols        TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers        HIGH:!aNULL:!MD5;
+    gzip on;
+    gzip_types text/plain application/xml;
+    location / {
+        root    /usr/share/nginx/html;
+        index    index.html index.htm;
+    }
 }
 ```
 
@@ -753,33 +748,35 @@ spec:
 ```
 
 > 해드리스(Headless) 서비스를 만들면 명시적인 클러스터 IP 가 할당되지 않고 라우팅 됩니다. 헤드리스 서비스는 다른 네임스페이스의 서비스에 라우팅이 필요 할때도 유용 합니다. 헤드리스 서비스의 ExternalName 을 사용하 다른 네임스페이스의 서비스를 연결 할 수 있습니다. 원래 ExternalName은 K8s 외부의 서비스를 K8s 내부 서비스인 것처럼 참조할수 있게 해주는 기능 입니다.
->
+> 
 > - 셀렉터가 있는경우 : 엔드포인트 컨트롤러가 엔드포인트 레코드를 생성하고 DNS 를 업데이트 하여 파드를 가르키는 A레코드(IP주소) 반환 하여 라우팅이 가능 합니다.
->
+> 
 > - 셀렉터기 없는 경우 : DNS 시스템이 CNAME레코드 구성 하거나 서비스 이름으로 구성된 엔트포인트 레코드 참조
->
+> 
 > - A 레코드와  CNAME 의 차이
->
+>   
 >   - A레코드 : 간단하게 도메인 이름에 IP Address 를 매핑하는 레코드
->
+>     
 >     ```{bash}
 >     Name: www.acorn.com
 >     Address: 10.0.24.3
 >     ```
->
+>   
 >   - CNAME(Canonical Name) : 도메인의 별칭을 부여하는 방식. 도메인의 또 다른 도메인 이름, A 레코드는 직접적으로 IP가 할당 되기 때문에 IP가 변경되면 직접 도메인에 영향을 미치지만, CNAME은 도메인에 매핑되어 있기 때문에 IP 변경에 직접적인 영향을 받지 않음
->
+>     
 >     ```{bash}
 >     www.acornstudy.com -> study.acorn.com (CNAME) 
 >     study.acorn.com -> 211.231.99.250 (A record)
 >     ```
->
+>     
 >     ```{bah}
->             
+>     
 >     ```
->
->
+>     
 >     mysql.acorn.com -> 211.231.99.250 (A record) 직접통신
+>     
+>     ```
+>     
 >     ```
 
 ##### 1.2 볼륨 구성
@@ -808,8 +805,6 @@ spec:
 ```{bash}
 kubectl create secret generic mysql-pass  --from-literal=password='admin123'
 ```
-
-
 
 파일명 : mysql-deploy.yaml
 
@@ -1086,7 +1081,6 @@ kubectl get svc
 NAME                     TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)        AGE
 service/kubernetes       ClusterIP      10.65.0.1      <none>         443/TCP        7h43m
 service/nodesjs-sfs-lb   LoadBalancer   10.65.12.243   34.85.38.158   80:32280/TCP   120m
-
 ```
 
 ### 16.4 서비스 테스트
@@ -1218,7 +1212,7 @@ kubectl apply -f ./php-apache-svc.yaml
 
 아래 요구 사항에 맞는 deploy 를 구현 하세요
 
-| 항목        | 내용        |
+| 항목          | 내용          |
 | ----------- | ----------- |
 | Deploy name | nginx       |
 | Image       | ginx:latest |
@@ -1226,15 +1220,11 @@ kubectl apply -f ./php-apache-svc.yaml
 | memory      | 300Mi       |
 | Port        | 80          |
 
-
-
 1. Deploy name : nginx
 2. image : nginx
 3. cpu 200m
 4. 메모리 : 300Mi
 5. Port : 80
-
-
 
 ### 12.3 HPA 리소스 생성
 
@@ -1244,28 +1234,22 @@ kubectl apply -f ./php-apache-svc.yaml
 kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=5
 ```
 
-
-
 #### 12.3.2 HPA 리소스 생성 확인
 
 ```{bash}
 kubectl get hpa
 ```
 
-
-
 ### 12.4 Jmeter 설치 및 구성
-
-
 
 #### 12.4.1 Jmeter 설치를 위해 필요한 것들
 
 - JDK 1.8 이상 설치 [오라클 java SE jdk 다운로드](https://www.oracle.com/java/technologies/javase-downloads.html)
 
 - Jmeter 다운로드 [Jmeter 다운로드](https://jmeter.apache.org/download_jmeter.cgi)
-
+  
   플러그인 다운로드 [Jmeter-plugin 다운로드](https://jmeter-plugins.org/install/Install/)
-
+  
   - Plugins-manager.jar 다운로드 하여 jmeter 내에 lib/ext 밑에 복사 합니다.  jpgc
 
 #### 12.4.2 Jmeter 를 통한 부하 발생
